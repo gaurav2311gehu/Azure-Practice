@@ -39,20 +39,20 @@ Parameters:
 
 --generate-ssh-keys → Creates SSH key if not exists (~/.ssh/id_rsa)
 
-5️⃣ Open Ports (Optional)
+Open Ports (Optional)
 
 Example: Allow SSH (22) and HTTP (80):
 
 az vm open-port --resource-group MyResourceGroup --name MyVM --port 22
 az vm open-port --resource-group MyResourceGroup --name MyVM --port 80
 
-6️⃣ SSH into the VM
+SSH into the VM
 
 After az vm create, Azure CLI outputs JSON including publicIpAddress.
 
 ssh azureuser@<PUBLIC_IP>
 
-7️⃣ Delete VM (When Done)
+Delete VM (When Done)
 az group delete --name MyResourceGroup --yes --no-wait
 
 
