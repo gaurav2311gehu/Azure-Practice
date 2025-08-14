@@ -1,0 +1,99 @@
+Login to Azure
+az login
+
+
+If your VM/terminal has no browser:
+
+az login --use-device-code
+
+Set the Subscription (if you have multiple)
+az account list --output table
+az account set --subscription "<SUBSCRIPTION_NAME_OR_ID>"
+
+Create a Resource Group
+
+az group create \
+  --name MyResourceGroup \
+  --location eastus
+
+
+--name → Your resource group name.
+
+--location → Azure region (use az account list-locations --output table to see all).
+
+Create the Virtual Machine
+az vm create \
+  --resource-group MyResourceGroup \
+  --name MyVM \
+  --image Ubuntu2204 \
+  --size Standard_B1s \
+  --admin-username azureuser \
+  --generate-ssh-keys
+
+
+Parameters:
+
+--image → OS image (Ubuntu2204, Ubuntu2004, Win2022Datacenter, etc.)
+
+--size → VM size (check available sizes: az vm list-sizes --location eastus)
+
+--generate-ssh-keys → Creates SSH key if not exists (~/.ssh/id_rsa)
+
+5️⃣ Open Ports (Optional)
+
+Example: Allow SSH (22) and HTTP (80):
+
+az vm open-port --resource-group MyResourceGroup --name MyVM --port 22
+az vm open-port --resource-group MyResourceGroup --name MyVM --port 80
+
+6️⃣ SSH into the VM
+
+After az vm create, Azure CLI outputs JSON including publicIpAddress.
+
+ssh azureuser@<PUBLIC_IP>
+
+7️⃣ Delete VM (When Done)
+az group delete --name MyResourceGroup --yes --no-wait
+
+
+You can create an Azure VM with a username and password instead of SSH keys — you just need to use the --admin-password flag instead of --generate-ssh-keys.
+
+
+Create VM with Username & Password
+az vm create \
+  --resource-group MyResourceGroup \
+  --name MyVM \
+  --image Ubuntu2204 \
+  --size Standard_B1s \
+  --admin-username azureuser \
+  --admin-password 'StrongP@ssw0rd123' \
+  --authentication-type password
+
+
+Important:
+
+Password must be 12+ characters with at least 1 uppercase, 1 lowercase, 1 number, and 1 special character — otherwise Azure will reject it.
+
+--authentication-type password ensures it uses username/password login.
+
+Open Port 22 for SSH
+az vm open-port --resource-group MyResourceGroup --name MyVM --port 22
+az vm open-port --resource-group MyResourceGroup --name MyVM --port 80
+az vm open-port --resource-group MyResourceGroup --name MyVM --port 443
+
+OR 
+
+az vm open-port --resource-group MyResourceGroup --name MyVM --port 80 443 22
+
+
+Login to VM
+
+After the VM is created, Azure CLI will show the publicIpAddress.
+SSH into it:
+
+ssh azureuser@<PUBLIC_IP>
+
+
+Enter the password you set with --admin-password.
+
+Thanks
